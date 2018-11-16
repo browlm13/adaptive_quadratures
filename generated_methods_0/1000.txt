@@ -1,0 +1,1 @@
+{"method_params": {"high_order": 13, "method_order_difference": 11.956521739130434, "low_order": 11, "variable_h": true,"local_error_method_id": "4.2.2", "min_h": 9.232978617785736e-128}, "method_name": "GaussLegendreQuadrature"}

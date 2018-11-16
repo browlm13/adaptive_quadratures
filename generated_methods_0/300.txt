@@ -1,0 +1,1 @@
+{"method_name": "LobattoQuadrature", "method_params": {"variable_h": true, "method_order_difference": 1.0344827586206897,"local_error_method_id": "1.4.4", "min_h": 0.7, "high_order": 13, "low_order": 12}}
