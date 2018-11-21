@@ -32,22 +32,18 @@ from AdaptiveQuadrature import *
 
 from scipy.integrate import quad
 
+# wrap
 cpd4 = 	{'epsabs' : 'tol', 'full_output' : '1',  'epsrel' : '0.0'}
 crd4 =  {'Iref' : '{\'Iapprox\' : return_vals[0]}', 'infodict' : '{\'nf\' : return_vals[2][\'neval\']}', 'Ierr' : '{}'}
 cro4 = 	['Iref', 'Ierr', 'infodict']
-method_name = "scipy quad"
-
-reference_method = Wrapper(quad, cpd4, crd4, cro4, method_name)
-
-# set as reference method
-REFERENCE_METHOD = method_name
+method_name1 = "scipy quad"
+reference_method = Wrapper(quad, cpd4, crd4, cro4, method_name1)
 
 #
 # adaptive lobatto
 #
 
 from adaptive_lobatto import AdaptiveLobatto1213
-
 adapt_lobatto = AdaptiveLobatto1213()
 
 #
@@ -56,16 +52,12 @@ adapt_lobatto = AdaptiveLobatto1213()
 
 from adaptive_lobatto_DRR import adaptive_lobatto as adapt_lobatto_DRR
 
+# wrap
 cpdr = 	{'tol' : 'tol'}
 crdr =  {'Iapprox' : '{\'Iapprox\' : return_vals[0]}', 'nf' : '{\'nf\' : return_vals[1]}'}
 cror = 	['Iapprox', 'nf']
-
-method_name = "R"
-
-adapt_lobatto_drr = Wrapper(adapt_lobatto_DRR, cpdr, crdr, cror, method_name)
-
-# set as reference method
-REFERENCE_METHOD = method_name
+method_name3 = "Dr.R"
+adapt_lobatto_drr = Wrapper(adapt_lobatto_DRR, cpdr, crdr, cror, method_name3)
 
 #
 # Methods to test
@@ -80,10 +72,10 @@ test_methods = [reference_method, adapt_lobatto, adapt_lobatto_drr]
 # other settings
 CONSOLE_OUTPUT = True
 PLOT = True
-additional_settings_parameters = {'output' : False, 'maxit' : 100}
-
 min_tol, max_tol = -4, -10
-num_tols = abs(max_tol - min_tol) - 1
+num_tols = abs(max_tol - min_tol) + 1
+REFERENCE_METHOD = method_name3 		# set reference method
+additional_settings_parameters = {'output' : False, 'maxit' : 100}
 
 #
 #  helper methods
@@ -93,18 +85,21 @@ def geometric_mean(v):
 	""" returns geometric mean of numpy vector """
 	return np.prod(np.power(v,1/v.size))
 
-def plot_error_v_tol(df):
+def plot_error_v_tol(df, plot_title=None):
 	error_tol_df = df[['error', 'tol', 'method_name']]
 	error_tol_df.set_index('tol', inplace=True)
-	error_tol_df.groupby('method_name')['error'].plot(legend=True, loglog=True)
+	error_tol_df.groupby('method_name')['error'].plot(legend=True, loglog=True, title=plot_title)
 
 	plt.show()
 
 
-def plot_nf_v_tol(df,tols):
+def plot_nf_v_tol(df,tols, plot_title=None):
 	nrows = 2
 	ncols = math.ceil(len(tols)/2)
 	fig, axes = plt.subplots(nrows=nrows, ncols=ncols)
+
+	if plot_title is not None:
+		fig.suptitle(plot_title, fontsize=14)
 
 	for i,tol in enumerate(tols):
 		if i >= int(len(tols)/2): 
@@ -222,19 +217,12 @@ def run_integral_trials(min_tol, max_tol, num_tols, integral_name, test_integral
 		trials_df = pd.DataFrame(trial_logs)
 
 	#
-	# output results
-	#
-
-	#if CONSOLE_OUTPUT:
-	#	print(trials_df[['nf', 'method_name']])
-
-	#
 	# plot results
 	#
 
 	if PLOT:
-		plot_error_v_tol(trials_df)
-		plot_nf_v_tol(trials_df, tols)
+		plot_error_v_tol(trials_df, plot_title=integral_name)
+		plot_nf_v_tol(trials_df, tols, plot_title=integral_name)
 
 	# return test integral statistics
 	return err, rat, wk
@@ -262,8 +250,11 @@ def run_trials(min_tol, max_tol, num_tols, test_integrals, test_methods, additio
 
 	#display output
 	if CONSOLE_OUTPUT:
+
 		method_stats = pd.DataFrame(columns=['method', 'max err', 'combined err', 'combined nf'])
+
 		row2name = {i:str(m) for i,m in zip(range(len(test_methods)),test_methods)}
+
 		for r in range(len(test_methods)):
 			rat = Rat[r,:]
 			wk = Wk[r,:]
