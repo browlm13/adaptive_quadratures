@@ -37,7 +37,7 @@ test_integrals = {}
 # test integral 1
 #
 
-integral_name1 = "I1"
+integral_name1 = "$cos(x^{4}) - e^{\\frac{-x}{3}} \, x \, \in \{-3,3\}$"
 
 a1 = -3.0
 b1 = 3.0
@@ -55,7 +55,7 @@ test_integrals = add_test_integral(test_integrals, integral_name1, a1, b1, f1, I
 # test integral 2
 #
 
-integral_name2 = "I2"
+integral_name2 = "$cos(x^{4}) - e^{\\frac{-x}{3}} \, x \, \in \{-5,5\}$"
 
 a2 = -5.0
 b2 = 5.0
@@ -73,7 +73,7 @@ test_integrals = add_test_integral(test_integrals, integral_name2, a2, b2, f2, I
 # test integral 3
 #
 
-integral_name3 = "I3"
+integral_name3 = "$cos(x^{2})$"
 
 a3 = 0.0
 b3 = 2*np.pi
@@ -90,7 +90,7 @@ test_integrals = add_test_integral(test_integrals, integral_name3, a3, b3, f3, I
 # test integral 4
 #
 
-integral_name4 = "I4"
+integral_name4 = "$ xe^{-x^{2}} + sin(e^{-x^{2}})$"
 
 a4 = 0.01
 b4 = 10000
@@ -107,7 +107,7 @@ test_integrals = add_test_integral(test_integrals, integral_name4, a4, b4, f4, I
 # test integral 4
 #
 
-integral_name5 = "I5"
+integral_name5 = "$ -cos(20.01^{4}) + cos(20^{4})$" 
 
 a5 = 20
 b5 = 20.01
@@ -136,5 +136,3 @@ I6 = (np.sin(2*b6**3) - np.sin(2*a6**3))/6
 
 # add to dict
 test_integrals = add_test_integral(test_integrals, integral_name6, a6, b6, f6, I6)
-
-
